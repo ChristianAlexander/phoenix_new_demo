@@ -5,6 +5,7 @@ defmodule RetroBoardWeb.RetroLive do
   alias Phoenix.PubSub
 
   @impl true
+  @impl true
   def mount(params, _session, socket) do
     case Map.get(params, "code") do
       nil ->
