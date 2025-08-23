@@ -17,7 +17,8 @@ defmodule RetroBoardWeb.Router do
   scope "/", RetroBoardWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    live "/", RetroLive
+    live "/retro/:code", RetroLive
   end
 
   # Other scopes may use custom stacks.
