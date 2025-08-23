@@ -14,7 +14,7 @@ defmodule RetroBoard.Retros do
   def create_retro(attrs \\ %{}) do
     code = generate_unique_code()
 
-    attrs = Map.put(attrs, :code, code)
+    attrs = Map.put(attrs, "code", code)
 
     %Retro{}
     |> Retro.changeset(attrs)
