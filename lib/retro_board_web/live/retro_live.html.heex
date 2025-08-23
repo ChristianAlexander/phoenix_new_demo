@@ -151,24 +151,3 @@
     <% end %>
   </div>
 </Layouts.app>
-
-<%!-- Helper functions for styling columns --%>
-<% defp column_bg_class("start"), do: "bg-green-50"
-defp column_bg_class("stop"), do: "bg-red-50"
-defp column_bg_class("continue"), do: "bg-blue-50"
-defp column_bg_class(_), do: "bg-gray-50"
-
-defp column_text_class("start"), do: "text-green-800"
-defp column_text_class("stop"), do: "text-red-800"
-defp column_text_class("continue"), do: "text-blue-800"
-defp column_text_class(_), do: "text-gray-800"
-
-defp column_border_class("start"), do: "border-green-200"
-defp column_border_class("stop"), do: "border-red-200"
-defp column_border_class("continue"), do: "border-blue-200"
-defp column_border_class(_), do: "border-gray-200"
-
-defp column_icon("start"), do: "🟢"
-defp column_icon("stop"), do: "🔴"
-defp column_icon("continue"), do: "🔵"
-defp column_icon(_), do: "⚪" %>
