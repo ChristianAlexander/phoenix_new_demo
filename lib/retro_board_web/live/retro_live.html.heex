@@ -198,7 +198,7 @@
                           <% # Fetch reactions for this specific item and emoji directly from the item's reactions
                           # user_session_id is obtained from the socket's connect_info or set to "anonymous"
                           user_session_id =
-                            get_connect_params(@socket)["_csrf_token"] || "anonymous"
+                            @user_session_id
 
                           reaction_count =
                             item.reactions |> Enum.filter(&(&1.emoji == emoji)) |> length()
