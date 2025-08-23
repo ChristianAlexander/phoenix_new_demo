@@ -9,6 +9,8 @@ defmodule RetroBoard.Retros.FeedbackItem do
 
     belongs_to :retro, RetroBoard.Retros.Retro
 
+    has_many :reactions, RetroBoard.Retros.Reaction
+
     timestamps()
   end
 
