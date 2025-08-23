@@ -14,20 +14,20 @@ defmodule RetroBoardWeb.RetroLive do
         {:ok, assign_landing_page(socket, user_session_id)}
 
       code ->
+        user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
+
         # Join existing retro by code
         case Retros.get_retro_by_code_with_feedback(code) do
           nil ->
             {:ok,
              socket
              |> put_flash(:error, "Retro not found with code: #{String.upcase(code)}")
-             |> assign_landing_page()}
+             |> assign_landing_page(user_session_id)}
 
           retro ->
             if connected?(socket) do
               PubSub.subscribe(RetroBoard.PubSub, "retro:#{retro.id}")
             end
-
-            user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
 
             {:ok, assign_retro_board(socket, retro, user_session_id)}
         end
