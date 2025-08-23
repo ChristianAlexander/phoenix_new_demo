@@ -13,14 +13,86 @@
     </div>
   </header>
   
-<!-- Main Content -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Welcome Section -->
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-gray-900 mb-4">Create or Join a Retrospective</h2>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        Collaborate with your team in real-time. No accounts needed - just share the room code.
+<!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="text-center mb-16">
+      <h2 class="text-5xl font-bold text-gray-900 mb-6">
+        Better Sprint Retrospectives
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Turn your team's retrospectives into actionable insights. Real-time collaboration,
+        no accounts required, and instant feedback sharing that actually drives improvement.
       </p>
+    </div>
+    
+<!-- Value Proposition Panels -->
+    <div class="grid md:grid-cols-3 gap-8 mb-16">
+      <!-- Panel 1: Real-time Collaboration -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Real-time Collaboration</h3>
+        <p class="text-gray-600 leading-relaxed">
+          See everyone's feedback appear instantly. No more waiting for people to finish typing
+          or wondering who submitted what. Watch ideas flow naturally as your team contributes.
+        </p>
+      </div>
+      
+<!-- Panel 2: Zero Friction Setup -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg
+            class="w-8 h-8 text-green-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M13 10V3L4 14h7v7l9-11h-7z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Zero Friction Setup</h3>
+        <p class="text-gray-600 leading-relaxed">
+          No accounts, no downloads, no complex setup. Share a simple room code and your team
+          is ready to start. Get to the valuable conversation faster than any other tool.
+        </p>
+      </div>
+      
+<!-- Panel 3: Actionable Insights -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 text-center">
+        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+          <svg
+            class="w-8 h-8 text-purple-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+            />
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Actionable Insights</h3>
+        <p class="text-gray-600 leading-relaxed">
+          Organized feedback in clear Start, Stop, Continue categories helps teams focus
+          on what matters. Turn retrospective discussions into concrete next sprint actions.
+        </p>
+      </div>
     </div>
     
 <!-- Action Cards -->
@@ -72,8 +144,13 @@
     
 <!-- Sample Retro Board Preview -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+      <div class="text-center mb-8">
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">See It In Action</h3>
+        <p class="text-gray-600">Here's what your team's retro board will look like</p>
+      </div>
+
       <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold text-gray-900">Sprint 41 Retrospective</h3>
+        <h4 class="text-xl font-bold text-gray-900">Sprint 41 Retrospective</h4>
         <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-medium">
           Code: ABC123
         </span>
@@ -82,7 +159,7 @@
       <div class="grid md:grid-cols-3 gap-6">
         <!-- Start Column -->
         <div class="bg-green-50 rounded-lg p-4">
-          <h4 class="font-bold text-green-800 mb-4 text-center">🟢 Start</h4>
+          <h5 class="font-bold text-green-800 mb-4 text-center">🟢 Start</h5>
           <div class="space-y-3">
             <div class="bg-white p-3 rounded border border-green-200 text-sm">
               <p class="text-gray-800">Daily standup check-ins</p>
@@ -97,7 +174,7 @@
         
 <!-- Stop Column -->
         <div class="bg-red-50 rounded-lg p-4">
-          <h4 class="font-bold text-red-800 mb-4 text-center">🔴 Stop</h4>
+          <h5 class="font-bold text-red-800 mb-4 text-center">🔴 Stop</h5>
           <div class="space-y-3">
             <div class="bg-white p-3 rounded border border-red-200 text-sm">
               <p class="text-gray-800">Last minute scope changes</p>
@@ -108,7 +185,7 @@
         
 <!-- Continue Column -->
         <div class="bg-blue-50 rounded-lg p-4">
-          <h4 class="font-bold text-blue-800 mb-4 text-center">🔵 Continue</h4>
+          <h5 class="font-bold text-blue-800 mb-4 text-center">🔵 Continue</h5>
           <div class="space-y-3">
             <div class="bg-white p-3 rounded border border-blue-200 text-sm">
               <p class="text-gray-800">Pair programming sessions</p>
@@ -122,5 +199,5 @@
         </div>
       </div>
     </div>
-  </main>
+  </section>
 </div>
