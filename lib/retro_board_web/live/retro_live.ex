@@ -9,7 +9,9 @@ defmodule RetroBoardWeb.RetroLive do
     case Map.get(params, "code") do
       nil ->
         # Landing page - show create/join forms
-        {:ok, assign_landing_page(socket)}
+        user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
+
+        {:ok, assign_landing_page(socket, user_session_id)}
 
       code ->
         # Join existing retro by code
@@ -25,7 +27,9 @@ defmodule RetroBoardWeb.RetroLive do
               PubSub.subscribe(RetroBoard.PubSub, "retro:#{retro.id}")
             end
 
-            {:ok, assign_retro_board(socket, retro)}
+            user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
+
+            {:ok, assign_retro_board(socket, retro, user_session_id)}
         end
     end
   end
@@ -125,18 +129,20 @@ defmodule RetroBoardWeb.RetroLive do
     {:noreply, assign(socket, :retro, retro)}
   end
 
-  defp assign_landing_page(socket) do
+  defp assign_landing_page(socket, user_session_id) do
     create_changeset = Retros.Retro.changeset(%Retros.Retro{}, %{})
 
     socket
     |> assign(:page_mode, :landing)
+    |> assign(:user_session_id, user_session_id)
     |> assign(:create_form, to_form(create_changeset))
     |> assign(:join_form, to_form(%{}, as: :join))
   end
 
-  defp assign_retro_board(socket, retro) do
+  defp assign_retro_board(socket, retro, user_session_id) do
     socket
     |> assign(:page_mode, :board)
+    |> assign(:user_session_id, user_session_id)
     |> assign(:retro, retro)
     |> assign(:user_name, nil)
     |> assign(:user_form, to_form(%{}, as: :user))
