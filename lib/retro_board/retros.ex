@@ -34,7 +34,7 @@ defmodule RetroBoard.Retros do
   def get_retro_by_code_with_feedback(code) do
     from(r in Retro,
       where: r.code == ^String.upcase(code),
-      preload: [feedback_items: from(f in FeedbackItem, order_by: [desc: f.inserted_at])]
+      preload: [:feedback_items]
     )
     |> Repo.one()
   end
