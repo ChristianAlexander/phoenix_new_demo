@@ -6,7 +6,7 @@ defmodule RetroBoard.Retros do
   import Ecto.Query, warn: false
   alias RetroBoard.Repo
 
-  alias RetroBoard.Retros.{Retro, FeedbackItem}
+  alias RetroBoard.Retros.{Retro, FeedbackItem, Reaction}
 
   @doc """
   Creates a retro with a unique random code.
@@ -72,6 +72,55 @@ defmodule RetroBoard.Retros do
       nil -> code
       _retro -> generate_unique_code()
     end
+  end
+
+  @doc """
+  Toggles a reaction for a feedback item by a user.
+  """
+  def toggle_reaction(feedback_item_id, user_session_id, emoji) do
+    case Repo.get_by(Reaction,
+           feedback_item_id: feedback_item_id,
+           user_session_id: user_session_id,
+           emoji: emoji
+         ) do
+      nil ->
+        # Create new reaction
+        %Reaction{}
+        |> Reaction.changeset(%{
+          feedback_item_id: feedback_item_id,
+          user_session_id: user_session_id,
+          emoji: emoji
+        })
+        |> Repo.insert()
+
+      reaction ->
+        # Delete existing reaction
+        Repo.delete(reaction)
+    end
+  end
+
+  @doc """
+  Gets reaction counts for a feedback item.
+  """
+  def get_reaction_counts(feedback_item_id) do
+    from(r in Reaction,
+      where: r.feedback_item_id == ^feedback_item_id,
+      group_by: r.emoji,
+      select: {r.emoji, count(r.id)}
+    )
+    |> Repo.all()
+    |> Enum.into(%{})
+  end
+
+  @doc """
+  Gets user reactions for a feedback item.
+  """
+  def get_user_reactions(feedback_item_id, user_session_id) do
+    from(r in Reaction,
+      where: r.feedback_item_id == ^feedback_item_id and r.user_session_id == ^user_session_id,
+      select: r.emoji
+    )
+    |> Repo.all()
   end
 
   defp generate_code do
