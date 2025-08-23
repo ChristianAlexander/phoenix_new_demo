@@ -1,0 +1,118 @@
+defmodule RetroBoardWeb.RetroLive do
+  use RetroBoardWeb, :live_view
+
+  alias RetroBoard.Retros
+  alias Phoenix.PubSub
+
+  @impl true
+  def mount(params, _session, socket) do
+    case Map.get(params, "code") do
+      nil ->
+        # Landing page - show create/join forms
+        {:ok, assign_landing_page(socket)}
+
+      code ->
+        # Join existing retro by code
+        case Retros.get_retro_by_code_with_feedback(code) do
+          nil ->
+            {:ok,
+             socket
+             |> put_flash(:error, "Retro not found with code: #{String.upcase(code)}")
+             |> assign_landing_page()}
+
+          retro ->
+            if connected?(socket) do
+              PubSub.subscribe(RetroBoard.PubSub, "retro:#{retro.id}")
+            end
+
+            {:ok, assign_retro_board(socket, retro)}
+        end
+    end
+  end
+
+  @impl true
+  def handle_event("create_retro", %{"retro" => retro_params}, socket) do
+    case Retros.create_retro(retro_params) do
+      {:ok, retro} ->
+        if connected?(socket) do
+          PubSub.subscribe(RetroBoard.PubSub, "retro:#{retro.id}")
+        end
+
+        {:noreply,
+         socket
+         |> put_flash(:info, "Retro created! Share code: #{retro.code}")
+         |> push_navigate(to: ~p"/retro/#{retro.code}")}
+
+      {:error, changeset} ->
+        {:noreply, assign(socket, :create_form, to_form(changeset))}
+    end
+  end
+
+  @impl true
+  def handle_event("join_retro", %{"join" => %{"code" => code}}, socket) do
+    case Retros.get_retro_by_code(code) do
+      nil ->
+        {:noreply, put_flash(socket, :error, "Retro not found with code: #{String.upcase(code)}")}
+
+      retro ->
+        {:noreply, push_navigate(socket, to: ~p"/retro/#{retro.code}")}
+    end
+  end
+
+  @impl true
+  def handle_event("set_user_name", %{"user" => %{"name" => name}}, socket) do
+    {:noreply, assign(socket, :user_name, name)}
+  end
+
+  @impl true
+  def handle_event("add_feedback", %{"feedback" => feedback_params}, socket) do
+    %{"column" => column, "content" => content} = feedback_params
+    retro = socket.assigns.retro
+    user_name = socket.assigns.user_name
+
+    case Retros.add_feedback_item(retro.id, column, content, user_name) do
+      {:ok, feedback_item} ->
+        # Broadcast to all users in this retro
+        PubSub.broadcast(
+          RetroBoard.PubSub,
+          "retro:#{retro.id}",
+          {:new_feedback, feedback_item}
+        )
+
+        {:noreply, socket}
+
+      {:error, _changeset} ->
+        {:noreply, put_flash(socket, :error, "Failed to add feedback")}
+    end
+  end
+
+  @impl true
+  def handle_info({:new_feedback, feedback_item}, socket) do
+    retro = Retros.get_retro_by_code_with_feedback(socket.assigns.retro.code)
+    {:noreply, assign(socket, :retro, retro)}
+  end
+
+  defp assign_landing_page(socket) do
+    create_changeset = Retros.Retro.changeset(%Retros.Retro{}, %{})
+
+    socket
+    |> assign(:page_mode, :landing)
+    |> assign(:create_form, to_form(create_changeset))
+    |> assign(:join_form, to_form(%{}, as: :join))
+  end
+
+  defp assign_retro_board(socket, retro) do
+    socket
+    |> assign(:page_mode, :board)
+    |> assign(:retro, retro)
+    |> assign(:user_name, nil)
+    |> assign(:user_form, to_form(%{}, as: :user))
+    |> assign(:feedback_forms, build_feedback_forms(retro.columns))
+  end
+
+  defp build_feedback_forms(columns) do
+    for {column_key, _column_name} <- columns, into: %{} do
+      {column_key, to_form(%{}, as: :feedback)}
+    end
+  end
+end
