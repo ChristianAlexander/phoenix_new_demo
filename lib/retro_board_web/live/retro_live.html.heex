@@ -190,6 +190,45 @@
                     <span class={"text-xs font-medium #{column_text_class(column_key)}"}>
                       — {item.author_name}
                     </span>
+
+                    <%= if @user_name do %>
+                      <!-- Reaction buttons -->
+                      <div class="flex flex-wrap items-center gap-1 mt-2">
+                        <%= for emoji <- ["👍", "❤️", "💡", "🚀", "😅"] do %>
+                          <% # Fetch reactions for this specific item and emoji directly from the item's reactions
+                          # user_session_id is obtained from the socket's connect_info or set to "anonymous"
+                          user_session_id =
+                            get_connect_params(@socket)["_csrf_token"] || "anonymous"
+
+                          reaction_count =
+                            item.reactions |> Enum.filter(&(&1.emoji == emoji)) |> length()
+
+                          user_reacted =
+                            item.reactions
+                            |> Enum.any?(
+                              &(&1.emoji == emoji and &1.user_session_id == user_session_id)
+                            ) %>
+
+                          <button
+                            phx-click="toggle_reaction"
+                            phx-value-item_id={item.id}
+                            phx-value-emoji={emoji}
+                            class={[
+                              "flex items-center gap-1 px-2 py-1 text-xs rounded-full border transition-colors",
+                              if(user_reacted,
+                                do: "bg-blue-100 border-blue-300 text-blue-700",
+                                else: "border-gray-200 hover:bg-gray-50 text-gray-600"
+                              )
+                            ]}
+                          >
+                            <span>{emoji}</span>
+                            <%= if reaction_count > 0 do %>
+                              <span class="font-medium">{reaction_count}</span>
+                            <% end %>
+                          </button>
+                        <% end %>
+                      </div>
+                    <% end %>
                   </div>
                 <% end %>
               </div>
