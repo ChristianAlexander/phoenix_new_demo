@@ -36,7 +36,7 @@ defmodule RetroBoardWeb.RetroLive do
 
   @impl true
   def handle_event("toggle_reaction", %{"item_id" => item_id, "emoji" => emoji}, socket) do
-    user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
+    user_session_id = socket.assigns.user_session_id
 
     case Retros.toggle_reaction(String.to_integer(item_id), user_session_id, emoji) do
       {:ok, _reaction} ->
