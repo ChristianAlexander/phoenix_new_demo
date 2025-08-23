@@ -87,7 +87,7 @@ defmodule RetroBoardWeb.RetroLive do
   end
 
   @impl true
-  def handle_info({:new_feedback, feedback_item}, socket) do
+  def handle_info({:new_feedback, _feedback_item}, socket) do
     retro = Retros.get_retro_by_code_with_feedback(socket.assigns.retro.code)
     {:noreply, assign(socket, :retro, retro)}
   end
