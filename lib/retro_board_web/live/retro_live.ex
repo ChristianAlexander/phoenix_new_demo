@@ -5,7 +5,6 @@ defmodule RetroBoardWeb.RetroLive do
   alias Phoenix.PubSub
 
   @impl true
-  @impl true
   def mount(params, _session, socket) do
     case Map.get(params, "code") do
       nil ->
@@ -26,35 +25,35 @@ defmodule RetroBoardWeb.RetroLive do
               PubSub.subscribe(RetroBoard.PubSub, "retro:#{retro.id}")
             end
 
-            @impl true
-            def handle_event("toggle_reaction", %{"item_id" => item_id, "emoji" => emoji}, socket) do
-              user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
-
-              case Retros.toggle_reaction(String.to_integer(item_id), user_session_id, emoji) do
-                {:ok, _reaction} ->
-                  # Broadcast reaction change to all users in this retro
-                  PubSub.broadcast(
-                    RetroBoard.PubSub,
-                    "retro:#{socket.assigns.retro.id}",
-                    {:reaction_changed, String.to_integer(item_id)}
-                  )
-
-                  {:noreply, socket}
-
-                {:error, _changeset} ->
-                  # Reaction was removed (delete operation)
-                  PubSub.broadcast(
-                    RetroBoard.PubSub,
-                    "retro:#{socket.assigns.retro.id}",
-                    {:reaction_changed, String.to_integer(item_id)}
-                  )
-
-                  {:noreply, socket}
-              end
-            end
-
             {:ok, assign_retro_board(socket, retro)}
         end
+    end
+  end
+
+  @impl true
+  def handle_event("toggle_reaction", %{"item_id" => item_id, "emoji" => emoji}, socket) do
+    user_session_id = get_connect_params(socket)["_csrf_token"] || "anonymous"
+
+    case Retros.toggle_reaction(String.to_integer(item_id), user_session_id, emoji) do
+      {:ok, _reaction} ->
+        # Broadcast reaction change to all users in this retro
+        PubSub.broadcast(
+          RetroBoard.PubSub,
+          "retro:#{socket.assigns.retro.id}",
+          {:reaction_changed, String.to_integer(item_id)}
+        )
+
+        {:noreply, socket}
+
+      {:error, _changeset} ->
+        # Reaction was removed (delete operation)
+        PubSub.broadcast(
+          RetroBoard.PubSub,
+          "retro:#{socket.assigns.retro.id}",
+          {:reaction_changed, String.to_integer(item_id)}
+        )
+
+        {:noreply, socket}
     end
   end
 
@@ -115,12 +114,12 @@ defmodule RetroBoardWeb.RetroLive do
   end
 
   @impl true
-  @impl true
   def handle_info({:reaction_changed, _item_id}, socket) do
     retro = Retros.get_retro_by_code_with_feedback(socket.assigns.retro.code)
     {:noreply, assign(socket, :retro, retro)}
   end
 
+  @impl true
   def handle_info({:new_feedback, _feedback_item}, socket) do
     retro = Retros.get_retro_by_code_with_feedback(socket.assigns.retro.code)
     {:noreply, assign(socket, :retro, retro)}
